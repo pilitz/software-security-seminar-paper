@@ -1,109 +1,76 @@
-# Seminar Paper: Secure Authentication System with FastAPI
+# Seminar Paper: Secure FastAPI Authentication Example
 
 **Author:** Paul Ilitz
 
-This project implements a secure authentication and authorization system using [FastAPI](https://fastapi.tiangolo.com/). It demonstrates best practices for handling user credentials, JWT-based authentication, OAuth2 login with Google, rate limiting, and secure session management.
+This project demonstrates a secure authentication system using FastAPI, JWT tokens, OAuth (Google), and rate limiting. It is designed for educational purposes to showcase best practices in user authentication, token management, and API security.
 
 ## Features
 
-- **JWT Authentication:** Secure login with JSON Web Tokens, including token invalidation and jti tracking.
-- **Role-based Access Control:** Separate endpoints for users and admins.
-- **OAuth2 Login:** Google OAuth2 login integration.
-- **Rate Limiting:** Prevent brute-force attacks using configurable rate limits.
-- **Password Hashing:** Secure password storage using bcrypt.
-- **Logout Endpoint:** Invalidate tokens on logout.
-- **Extensive Testing:** Automated tests for authentication, authorization, and token security.
+- **JWT-based authentication** with token revocation (logout/invalidate)
+- **Role-based access control** (user/admin)
+- **Google OAuth 2.0 login** integration
+- **Rate limiting** to prevent brute-force attacks
+- **Password hashing** using bcrypt
+- **Replay attack prevention** (tokens are invalidated on logout)
+- **Environment-based configuration** via `.env` file
 
 ## Requirements
 
 - Python 3.12+
-- [uv](https://github.com/astral-sh/uv) (recommended for dependency management)
+- See `pyproject.toml` for dependencies
 
-## Installation
+## Setup
 
-1. **Clone the repository:**
-   ```bash
-   git clone <your-repo-url>
-   cd seminar-paper
-   ```
+1. **Clone the repository** and navigate to the project directory.
 
-2. **Install dependencies using [uv](https://github.com/astral-sh/uv):**
+2. **Install dependencies**:
    ```bash
    uv sync
    ```
+   Or use your preferred tool (e.g., `pip install .` if using PEP 517/518).
 
-3. **Set up environment variables:**
-   - Copy `.env` and adjust secrets as needed.
-   - Make sure to set `SECRET_KEY`, Google OAuth credentials, and rate limits.
+3. **Configure environment variables**:
+   - Copy `.env.example` to `.env` and fill in your secrets, or edit `.env` directly.
 
-## Usage
+4. **Database**:
+   - The user database is stored in `db.json`. Default users are provided.
 
-### Start the Application
+## Running the Application
 
-```bash
-uv run app.py
-```
-- Use `-d` or `--development` for development mode (localhost).
+- **Development mode** (localhost only):
+  ```bash
+  uv run app.py --development
+  ```
+- **Production mode** (binds to all interfaces):
+  ```bash
+  uv run app.py
+  ```
 
-### API Endpoints
+The API will be available at `http://localhost:8080`.
 
-- `POST /token`: Obtain JWT token (username/password).
-- `GET /protected`: Access protected resource (requires valid token).
-- `GET /admin`: Admin-only resource (requires admin role).
-- `POST /logout`: Invalidate current JWT token.
-- `GET /login`: Start Google OAuth2 login.
-- `GET /auth`: Google OAuth2 callback.
+## API Endpoints
 
-### Example: Obtain Token
-
-```bash
-curl -X POST -d "username=alice&password=secret" http://localhost:8080/token
-```
-
-### Example: Access Protected Route
-
-```bash
-curl -H "Authorization: Bearer <your_token>" http://localhost:8080/protected
-```
+- `POST /token` — Obtain JWT token with username/password
+- `POST /logout` — Invalidate current JWT token
+- `GET /protected` — Protected route (requires authentication)
+- `GET /admin` — Admin-only route
+- `GET /login` — Start Google OAuth login
+- `GET /auth` — Google OAuth callback
 
 ## Testing
 
-Run all tests using [pytest](https://docs.pytest.org/):
+- Run tests with:
+  ```bash
+  uv run pytest test.py
+  ```
 
-```bash
-uv run pytest test.py
-```
+## Security Notes
 
-## Security Features
-
-- **Password Hashing:** All passwords are hashed with bcrypt.
-- **JWT with jti:** Each token has a unique identifier (`jti`) and can be invalidated on logout.
-- **Token Expiry:** Tokens expire after a configurable time.
-- **Rate Limiting:** Configurable per endpoint to prevent abuse.
-- **OAuth2:** Secure third-party login via Google.
-- **Session Middleware:** For secure OAuth2 flows.
-
-## Configuration
-
-All configuration is managed via the `.env` file:
-
-- `SECRET_KEY`: Secret for JWT signing.
-- `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`: For Google OAuth2.
-- `RATE_LIMIT`: e.g., `5/minute`.
-- `ALGORITHM`: JWT algorithm (default: HS256).
-- `ACCESS_TOKEN_EXPIRE_MINUTES`: Token lifetime.
-
-## User Database
-
-User data is stored in `db.json` for demonstration purposes. In production, use a real database.
+- Passwords are hashed using bcrypt.
+- JWT tokens are invalidated on logout (using a unique `jti` per user).
+- Rate limiting is enforced on sensitive endpoints.
+- OAuth login is supported via Google.
 
 ## License
 
 This project is for educational purposes.
-
-## Acknowledgements
-
-- [FastAPI](https://fastapi.tiangolo.com/)
-- [Authlib](https://docs.authlib.org/)
-- [python-jose](https://python-jose.readthedocs.io/)
-- [slowapi](https://slowapi.readthedocs.io/)
