@@ -1,0 +1,14 @@
+{
+    "alice": {
+        "username": "alice",
+        "hashed_password": "$2b$12$KqBOtphiJawdAyB1ZQRbReWUK0n8QFgaj5si65g/92xZeFmunAtUq",
+        "role": "user",
+        "jti":null
+    },
+    "admin": {
+        "username": "admin",
+        "hashed_password": "$2b$12$JEUMuwk3Bo6vqaZR/wxRzuDp32eNnPB7An0Yhz58lTdFB8svxWW7y",
+        "role": "admin",
+        "jti": null
+    }
+}
